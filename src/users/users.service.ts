@@ -66,7 +66,7 @@ export class UsersService {
     return { user: updatedUser, message: "User updated successfully", success: true };
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<{ user: User, message: string, success: boolean }> {
     const existingUser = await this.userModel.findById(id);
 
     if (!existingUser) {
