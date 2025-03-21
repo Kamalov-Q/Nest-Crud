@@ -7,5 +7,4 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsNumber()
     age: number
-
 }

@@ -8,8 +8,9 @@ import { isValidObjectId, Model } from 'mongoose';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) { }
-  async create(createUserDto: CreateUserDto) {
-    const existingUser = await this.userModel.findOne({ username: createUserDto.username });
+  async create(createUserDto: CreateUserDto): Promise<{ user: User | null, message: string, success: boolean }> {
+    const { username } = createUserDto;
+    const existingUser = await this.userModel.findOne({ username });
     if (existingUser) {
       return { user: null, message: "User already exists", success: false };
     }
@@ -18,10 +19,12 @@ export class UsersService {
     return { user: newUser, message: "User created successfully", success: true };
   }
 
-  async findAll() {
+  async findAll(): Promise<{
+    user: User[] | [], message: string, success: boolean, count: number
+  }> {
     const allUsers = await this.userModel.find();
     return {
-      users: allUsers,
+      user: allUsers,
       message: "Users found successfully",
       success: true,
       count: allUsers.length
